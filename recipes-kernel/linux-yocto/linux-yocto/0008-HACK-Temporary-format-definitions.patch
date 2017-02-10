@@ -1,0 +1,27 @@
+From ba761b32058a9a809da1043955701819510891f5 Mon Sep 17 00:00:00 2001
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Date: Thu, 3 Dec 2015 16:19:48 +0200
+Subject: [PATCH 08/19] HACK: Temporary format definitions
+
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ include/uapi/linux/videodev2.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 66b02b0..81bd32b 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -612,6 +612,9 @@ struct v4l2_pix_format {
+ #define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L') /* SMPTE 421M Annex L compliant stream */
+ #define V4L2_PIX_FMT_VP8      v4l2_fourcc('V', 'P', '8', '0') /* VP8 */
+ 
++/* temporary formats */
++#define V4L2_PIX_FMT_YUYV420_V32 v4l2_fourcc('y', '0', '3', '2')
++
+ /*  Vendor-specific formats   */
+ #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /* cpia1 YUV */
+ #define V4L2_PIX_FMT_WNVA     v4l2_fourcc('W', 'N', 'V', 'A') /* Winnov hw compress */
+-- 
+2.8.1
+

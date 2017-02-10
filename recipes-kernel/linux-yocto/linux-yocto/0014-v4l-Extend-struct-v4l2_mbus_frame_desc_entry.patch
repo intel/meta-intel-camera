@@ -1,0 +1,58 @@
+From e86bc08ae704af47bceb956fc6df368dedf0753b Mon Sep 17 00:00:00 2001
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Date: Wed, 18 Dec 2013 13:45:21 +0200
+Subject: [PATCH 14/19] v4l: Extend struct v4l2_mbus_frame_desc_entry
+
+Add bpp fields and bus-specific information (CSI-2).
+
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ include/media/v4l2-subdev.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+index f182dfe..dfe8411 100644
+--- a/include/media/v4l2-subdev.h
++++ b/include/media/v4l2-subdev.h
+@@ -286,6 +286,17 @@ struct v4l2_subdev_audio_ops {
+ 	int (*s_stream)(struct v4l2_subdev *sd, int enable);
+ };
+ 
++/**
++ * struct v4l2_mbus_frame_desc_entry_csi2
++ *
++ * @channel: CSI-2 virtual channel
++ * @data_type: CSI-2 data type ID
++ */
++struct v4l2_mbus_frame_desc_entry_csi2 {
++	u8 channel;
++	u8 data_type;
++};
++
+ /* Indicates the @length field specifies maximum data length. */
+ #define V4L2_MBUS_FRAME_DESC_FL_LEN_MAX		(1U << 0)
+ /*
+@@ -298,14 +309,20 @@ struct v4l2_subdev_audio_ops {
+  * struct v4l2_mbus_frame_desc_entry - media bus frame description structure
+  *
+  * @flags: V4L2_MBUS_FRAME_DESC_FL_* flags
++ * @bpp: bits per pixel
+  * @pixelcode: media bus pixel code, valid if FRAME_DESC_FL_BLOB is not set
+  * @length: number of octets per frame, valid if V4L2_MBUS_FRAME_DESC_FL_BLOB
+  *	    is set
++ * @csi2: CSI-2 specific bus configuration
+  */
+ struct v4l2_mbus_frame_desc_entry {
+ 	u16 flags;
++	u8 bpp;
+ 	u32 pixelcode;
+ 	u32 length;
++	union {
++		struct v4l2_mbus_frame_desc_entry_csi2 csi2;
++	} bus;
+ };
+ 
+ #define V4L2_FRAME_DESC_ENTRY_MAX	4
+-- 
+2.8.1
+

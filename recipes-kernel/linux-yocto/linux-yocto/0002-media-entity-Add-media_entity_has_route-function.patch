@@ -1,0 +1,80 @@
+From 26f0a3b0ccd54f81e9f57d44540eb76fb22686ab Mon Sep 17 00:00:00 2001
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Date: Wed, 26 Mar 2014 04:01:46 +0100
+Subject: [PATCH 2/9] media: entity: Add media_entity_has_route() function
+
+This is a wrapper around the media entity has_route operation.
+
+Change-Id: I42371458e72b31fb11577f46d59c8e25317937fe
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Jianxu Zheng <jian.xu.zheng@intel.com>
+Reviewed-on: https://android.intel.com/519862
+Tested-by: Tao, Wei <wei.tao@intel.com>
+Reviewed-by: Ding, Yunliang <yunliang.ding@intel.com>
+Reviewed-by: Yang, Fan F <fan.f.yang@intel.com>
+Reviewed-by: Meng, WeiX <weix.meng@intel.com>
+Tested-by: Meng, WeiX <weix.meng@intel.com>
+---
+ drivers/media/media-entity.c | 29 +++++++++++++++++++++++++++++
+ include/media/media-entity.h |  3 +++
+ 2 files changed, 32 insertions(+)
+
+diff --git a/drivers/media/media-entity.c b/drivers/media/media-entity.c
+index 1e1c08c..78be904 100644
+--- a/drivers/media/media-entity.c
++++ b/drivers/media/media-entity.c
+@@ -90,6 +90,35 @@ EXPORT_SYMBOL_GPL(media_entity_cleanup);
+  * Graph traversal
+  */
+ 
++/**
++ * media_entity_has_route - Check if two entity pads are connected internally
++ * @entity: The entity
++ * @pad0: The first pad index
++ * @pad1: The second pad index
++ *
++ * This function can be used to check whether two pads of an entity are
++ * connected internally in the entity.
++ *
++ * The caller must hold entity->source->parent->mutex.
++ *
++ * Return: true if the pads are connected internally and false otherwise.
++ */
++bool media_entity_has_route(struct media_entity *entity, unsigned int pad0,
++			    unsigned int pad1)
++{
++	if (pad0 >= entity->num_pads || pad1 >= entity->num_pads)
++		return false;
++
++	if (pad0 == pad1)
++		return true;
++
++	if (!entity->ops || !entity->ops->has_route)
++		return true;
++
++	return entity->ops->has_route(entity, pad0, pad1);
++}
++EXPORT_SYMBOL_GPL(media_entity_has_route);
++
+ static struct media_entity *
+ media_entity_other(struct media_entity *entity, struct media_link *link)
+ {
+diff --git a/include/media/media-entity.h b/include/media/media-entity.h
+index a4d5cd6..17d13c0 100644
+--- a/include/media/media-entity.h
++++ b/include/media/media-entity.h
+@@ -156,6 +156,9 @@ struct media_pad *media_entity_remote_pad(struct media_pad *pad);
+ struct media_entity *media_entity_get(struct media_entity *entity);
+ void media_entity_put(struct media_entity *entity);
+ 
++bool media_entity_has_route(struct media_entity *entity, unsigned int sink,
++			    unsigned int source);
++
+ void media_entity_graph_walk_start(struct media_entity_graph *graph,
+ 		struct media_entity *entity);
+ struct media_entity *
+-- 
+2.9.0
+

@@ -1,0 +1,10 @@
+[Unit]
+Description=Loads ipu4 modules after booting is completed
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/bin/bash /usr/bin/camera-module-loading.sh
+
+[Install]
+WantedBy=multi-user.target

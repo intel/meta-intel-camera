@@ -1,0 +1,32 @@
+From bf0ddf9fd1a180396db921f078f62d664f25247f Mon Sep 17 00:00:00 2001
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Date: Mon, 4 Nov 2013 21:20:22 +0200
+Subject: [PATCH 06/19] mm: EXPORT_SYMBOL_GPL(find_vm_area);
+
+find_vm_area() is needed in implementing the DMA mapping API as a module,
+for one needs to find the struct vm_struct corresponding to a virtual
+address when the DMA memory is released.
+
+Device specific IOMMUs with associated DMA mapping implementations should
+be buildable as modules.
+
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ mm/vmalloc.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 8e3c9c5..c3c733a 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1418,6 +1418,7 @@ struct vm_struct *find_vm_area(const void *addr)
+ 
+ 	return NULL;
+ }
++EXPORT_SYMBOL_GPL(find_vm_area);
+ 
+ /**
+  *	remove_vm_area  -  find and remove a continuous kernel virtual area
+-- 
+2.8.1
+

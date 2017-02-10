@@ -1,0 +1,27 @@
+From 370ba172cf5831ceaceba0dc9546f14ab8ca2c2d Mon Sep 17 00:00:00 2001
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Date: Mon, 14 Sep 2015 14:27:44 +0300
+Subject: [PATCH 01/19] Docbook: media: Remove extra comma from 10-bit raw
+ bayer format name
+
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ Documentation/DocBook/media/v4l/pixfmt-srggb10.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/DocBook/media/v4l/pixfmt-srggb10.xml b/Documentation/DocBook/media/v4l/pixfmt-srggb10.xml
+index f34d03e..790c6a5 100644
+--- a/Documentation/DocBook/media/v4l/pixfmt-srggb10.xml
++++ b/Documentation/DocBook/media/v4l/pixfmt-srggb10.xml
+@@ -3,7 +3,7 @@
+ 	<refentrytitle>V4L2_PIX_FMT_SRGGB10 ('RG10'),
+ 	 V4L2_PIX_FMT_SGRBG10 ('BA10'),
+ 	 V4L2_PIX_FMT_SGBRG10 ('GB10'),
+-	 V4L2_PIX_FMT_SBGGR10 ('BG10'),
++	 V4L2_PIX_FMT_SBGGR10 ('BG10')
+ 	 </refentrytitle>
+ 	&manvol;
+       </refmeta>
+-- 
+2.8.1
+

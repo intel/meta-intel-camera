@@ -1,0 +1,48 @@
+From cf2eafb0e93c15c8bab392c8b70bf9ebaa3a56ca Mon Sep 17 00:00:00 2001
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Date: Wed, 26 Mar 2014 04:01:45 +0100
+Subject: [PATCH 1/9] media: entity: Add has_route entity operation
+
+The optional operation can be used by entities to report whether two
+pads are internally connected.
+
+Change-Id: I78bda3f53bf953b632739d54f548c530a1096b14
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Jianxu Zheng <jian.xu.zheng@intel.com>
+Reviewed-on: https://android.intel.com/519861
+Tested-by: Tao, Wei <wei.tao@intel.com>
+Reviewed-by: Ding, Yunliang <yunliang.ding@intel.com>
+Reviewed-by: Yang, Fan F <fan.f.yang@intel.com>
+Reviewed-by: Meng, WeiX <weix.meng@intel.com>
+Tested-by: Meng, WeiX <weix.meng@intel.com>
+---
+ include/media/media-entity.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/include/media/media-entity.h b/include/media/media-entity.h
+index 197f937..a4d5cd6 100644
+--- a/include/media/media-entity.h
++++ b/include/media/media-entity.h
+@@ -52,12 +52,17 @@ struct media_pad {
+  * @link_validate:	Return whether a link is valid from the entity point of
+  *			view. The media_entity_pipeline_start() function
+  *			validates all links by calling this operation. Optional.
++ * @has_route:		Return whether a route exists inside the entity between
++ *			two given pads. Optional. If the operation isn't
++ *			implemented all pads will be considered as connected.
+  */
+ struct media_entity_operations {
+ 	int (*link_setup)(struct media_entity *entity,
+ 			  const struct media_pad *local,
+ 			  const struct media_pad *remote, u32 flags);
+ 	int (*link_validate)(struct media_link *link);
++	bool (*has_route)(struct media_entity *entity, unsigned int pad0,
++			  unsigned int pad1);
+ };
+ 
+ struct media_entity {
+-- 
+2.9.0
+

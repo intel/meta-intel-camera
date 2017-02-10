@@ -1,0 +1,64 @@
+From 2a49a7f9f9b2c9ba8afd1f2786c2e4490a666f76 Mon Sep 17 00:00:00 2001
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Date: Tue, 26 Apr 2016 15:43:56 +0300
+Subject: [PATCH 17/17] media: Add poll support
+
+Implement poll for events. POLLPRI is used to notify users on incoming
+events.
+
+Change-Id: Ie3ab47ba3322627f276ce103753e19a5df70fe31
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/media-device.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/drivers/media/media-device.c b/drivers/media/media-device.c
+index 7d9583e..75066b4 100644
+--- a/drivers/media/media-device.c
++++ b/drivers/media/media-device.c
+@@ -795,6 +795,34 @@ static long media_device_ioctl(struct file *filp, unsigned int cmd,
+ 		ioctl_info, ARRAY_SIZE(ioctl_info));
+ }
+ 
++static unsigned int media_device_poll(struct file *filp,
++				      struct poll_table_struct *wait)
++{
++	struct media_device_fh *fh = media_device_fh(filp);
++	struct media_device *mdev = to_media_device(fh->fh.devnode);
++	unsigned int poll_events = poll_requested_events(wait);
++	int ret = 0;
++
++	if (poll_events & (POLLIN | POLLOUT))
++		return POLLERR;
++
++	if (poll_events & POLLPRI) {
++		unsigned long flags;
++		bool empty;
++
++		spin_lock_irqsave(&mdev->req_lock, flags);
++		empty = list_empty(&fh->kevents.head);
++		spin_unlock_irqrestore(&mdev->req_lock, flags);
++
++		if (empty)
++			poll_wait(filp, &fh->kevents.wait, wait);
++		else
++			ret |= POLLPRI;
++	}
++
++	return ret;
++}
++
+ #ifdef CONFIG_COMPAT
+ 
+ struct media_links_enum32 {
+@@ -848,6 +876,7 @@ static const struct media_file_operations media_device_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = media_device_open,
+ 	.ioctl = media_device_ioctl,
++	.poll = media_device_poll,
+ #ifdef CONFIG_COMPAT
+ 	.compat_ioctl = media_device_compat_ioctl,
+ #endif /* CONFIG_COMPAT */
+-- 
+2.9.0
+

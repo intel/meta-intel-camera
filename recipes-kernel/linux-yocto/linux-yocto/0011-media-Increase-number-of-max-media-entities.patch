@@ -1,0 +1,40 @@
+From 519e058ac9a9bb5c81af11b455674d7b1d8704cd Mon Sep 17 00:00:00 2001
+From: Samu Onkalo <samu.onkalo@intel.com>
+Date: Fri, 1 Jul 2016 15:17:56 +0300
+Subject: [PATCH 11/11] media: Increase number of max media entities
+
+Raise max number of media entities from 64 to 128.
+
+Change-Id: I860384a53ef0ca2868adde15663066e6be123c96
+Original-Tracked-On: https://jira01.devtools.intel.com/ICSF-315
+Signed-off-by: Samu Onkalo <samu.onkalo@intel.com>
+Reviewed-on: https://android.intel.com/520839
+Reviewed-by: Zheng, Jian Xu <jian.xu.zheng@intel.com>
+Tested-by: Tao, Wei <wei.tao@intel.com>
+Reviewed-by: Kaartinen, Jukka O <jukka.o.kaartinen@intel.com>
+Reviewed-by: Toivonen, Tuukka <tuukka.toivonen@intel.com>
+Reviewed-by: Meng, WeiX <weix.meng@intel.com>
+Tested-by: Meng, WeiX <weix.meng@intel.com>
+Tracked-On: https://jira01.devtools.intel.com/browse/OAM-35091
+Signed-off-by: Tao Wei <wei.tao@intel.com>
+Reviewed-on: https://android.intel.com:443/522945
+---
+ include/media/media-entity.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/media/media-entity.h b/include/media/media-entity.h
+index 720a720..6ffcc9e 100644
+--- a/include/media/media-entity.h
++++ b/include/media/media-entity.h
+@@ -119,7 +119,7 @@ static inline u32 media_entity_subtype(struct media_entity *entity)
+ }
+ 
+ #define MEDIA_ENTITY_ENUM_MAX_DEPTH	16
+-#define MEDIA_ENTITY_ENUM_MAX_ID	64
++#define MEDIA_ENTITY_ENUM_MAX_ID	128
+ 
+ /*
+  * The number of pads can't be bigger than the number of entities,
+-- 
+2.9.2
+

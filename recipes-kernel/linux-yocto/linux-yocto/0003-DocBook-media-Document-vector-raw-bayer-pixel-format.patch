@@ -1,0 +1,161 @@
+From 440600b94a3d241e401689453659340c4b61c57a Mon Sep 17 00:00:00 2001
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Date: Mon, 14 Sep 2015 14:29:34 +0300
+Subject: [PATCH 03/19] DocBook: media: Document vector raw bayer pixel formats
+
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ Documentation/DocBook/media/v4l/pixfmt-sgrbgv.xml  | 117 +++++++++++++++++++++
+ Documentation/DocBook/media/v4l/pixfmt-srggb12.xml |   2 +-
+ Documentation/DocBook/media/v4l/pixfmt.xml         |   1 +
+ 3 files changed, 119 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/DocBook/media/v4l/pixfmt-sgrbgv.xml
+
+diff --git a/Documentation/DocBook/media/v4l/pixfmt-sgrbgv.xml b/Documentation/DocBook/media/v4l/pixfmt-sgrbgv.xml
+new file mode 100644
+index 0000000..3cd1d3b
+--- /dev/null
++++ b/Documentation/DocBook/media/v4l/pixfmt-sgrbgv.xml
+@@ -0,0 +1,117 @@
++    <refentry id="pixfmt-sgrbgv32">
++      <refmeta>
++	<refentrytitle>V4L2_PIX_FMT_SBGGR8_16V32 (bV0A),
++	V4L2_PIX_FMT_SGBRG8_16V32 (bV0B), V4L2_PIX_FMT_SGRBG8_16V32 (bV0C),
++	V4L2_PIX_FMT_SRGGB8_16V32 (bV0D), V4L2_PIX_FMT_SBGGR10V32 (bV0E),
++	V4L2_PIX_FMT_SGBRG10V32 (bV0F), V4L2_PIX_FMT_SGRBG10V32 (bV0G),
++	V4L2_PIX_FMT_SRGGB10V32 (bV0H), V4L2_PIX_FMT_SBGGR12V32 (bV0I),
++	V4L2_PIX_FMT_SGBRG12V32 (bV0J), V4L2_PIX_FMT_SGRBG12V32 (bV0K),
++	V4L2_PIX_FMT_SRGGB12V32 (bV0L)</refentrytitle>
++	&manvol;
++      </refmeta>
++      <refnamediv>
++	<refname id="V4L2-PIX-FMT-SBGGR8-16V32"><constant>V4L2_PIX_FMT_SBGGR8_16V32</constant></refname>
++	<refname id="V4L2-PIX-FMT-SGBRG8-16V32"><constant>V4L2_PIX_FMT_SGBRG8_16V32</constant></refname>
++	<refname id="V4L2-PIX-FMT-SGRBG8-16V32"><constant>V4L2_PIX_FMT_SGRBG8_16V32</constant></refname>
++	<refname id="V4L2-PIX-FMT-SRGGB8-16V32"><constant>V4L2_PIX_FMT_SRGGB8_16V32</constant></refname>
++	<refname id="V4L2-PIX-FMT-SBGGR10V32"><constant>V4L2_PIX_FMT_SBGGR10V32</constant></refname>
++	<refname id="V4L2-PIX-FMT-SGBRG10V32"><constant>V4L2_PIX_FMT_SGBRG10V32</constant></refname>
++	<refname id="V4L2-PIX-FMT-SGRBG10V32"><constant>V4L2_PIX_FMT_SGRBG10V32</constant></refname>
++	<refname id="V4L2-PIX-FMT-SRGGB10V32"><constant>V4L2_PIX_FMT_SRGGB10V32</constant></refname>
++	<refname id="V4L2-PIX-FMT-SBGGR12V32"><constant>V4L2_PIX_FMT_SBGGR12V32</constant></refname>
++	<refname id="V4L2-PIX-FMT-SGBRG12V32"><constant>V4L2_PIX_FMT_SGBRG12V32</constant></refname>
++	<refname id="V4L2-PIX-FMT-SGRBG12V32"><constant>V4L2_PIX_FMT_SGRBG12V32</constant></refname>
++	<refname id="V4L2-PIX-FMT-SRGGB12V32"><constant>V4L2_PIX_FMT_SRGGB12V32</constant></refname>
++	<refpurpose>Vector bayer RGB formats</refpurpose>
++      </refnamediv>
++      <refsect1>
++	<title>Description</title>
++
++	<para>This format is like the corresponding formats without
++	the "V32" part (<xref
++	linkend="V4L2-PIX-FMT-SGRBG8">8-bit</xref>, <xref
++	linkend="pixfmt-srggb10">10-bit</xref>, <xref
++	linkend="pixfmt-sgrbg12">12-bit</xref> and <xref
++	linkend="V4L2-PIX-FMT-SBGGR16">16-bit</xref>), with the
++	exception that the pixel order in the memory is different. All
++	these formats use 16 bits per pixel, leaving the high order
++	bits to zero.</para>
++
++	<para>The vector length in pixels is indicated at the end of
++	the name of the format (32).</para>
++
++	<para>If the width of the image is not divisible by the length of the
++	vector, padding will be added to fill the vector.</para>
++
++	<example>
++	  <title><constant>V4L2_PIX_FMT_SGRBG8_16V32</constant> 64 &times;
++4 pixel image</title>
++
++	  <formalpara>
++	    <title>Byte Order.</title>
++	    <para>Each cell is two bytes. The subscripts refer to the
++location of the bayer matrix from the top left cornew of the GRBG image.
++	      <informaltable frame="none">
++		<tgroup cols="21" align="center">
++		  <colspec align="left" colwidth="2*" />
++		  <tbody valign="top">
++		    <row>
++		      <entry>start&nbsp;+&nbsp;0:</entry>
++		      <entry>Gr<subscript>(0,0)</subscript></entry>
++		      <entry>Gr<subscript>(1,0)</subscript></entry>
++		      <entry>Gr<subscript>(2,0)</subscript></entry>
++		      <entry>...</entry>
++		      <entry>Gr<subscript>(31,0)</subscript></entry>
++		      <entry>R<subscript>(0,0)</subscript></entry>
++		      <entry>R<subscript>(1,0)</subscript></entry>
++		      <entry>R<subscript>(2,0)</subscript></entry>
++		      <entry>...</entry>
++		      <entry>R<subscript>(31,0)</subscript></entry>
++		      <entry>B<subscript>(0,0)</subscript></entry>
++		      <entry>B<subscript>(1,0)</subscript></entry>
++		      <entry>B<subscript>(2,0)</subscript></entry>
++		      <entry>...</entry>
++		      <entry>B<subscript>(31,0)</subscript></entry>
++		      <entry>Gb<subscript>(0,0)</subscript></entry>
++		      <entry>Gb<subscript>(1,0)</subscript></entry>
++		      <entry>Gb<subscript>(2,0)</subscript></entry>
++		      <entry>...</entry>
++		      <entry>Gb<subscript>(31,0)</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>start&nbsp;+&nbsp;256:</entry>
++		      <entry>Gr<subscript>(0,1)</subscript></entry>
++		      <entry>Gr<subscript>(1,1)</subscript></entry>
++		      <entry>Gr<subscript>(2,1)</subscript></entry>
++		      <entry>...</entry>
++		      <entry>Gr<subscript>(31,1)</subscript></entry>
++		      <entry>R<subscript>(0,1)</subscript></entry>
++		      <entry>R<subscript>(1,1)</subscript></entry>
++		      <entry>R<subscript>(2,1)</subscript></entry>
++		      <entry>...</entry>
++		      <entry>R<subscript>(31,1)</subscript></entry>
++		      <entry>B<subscript>(0,1)</subscript></entry>
++		      <entry>B<subscript>(1,1)</subscript></entry>
++		      <entry>B<subscript>(2,1)</subscript></entry>
++		      <entry>...</entry>
++		      <entry>B<subscript>(31,1)</subscript></entry>
++		      <entry>Gb<subscript>(0,1)</subscript></entry>
++		      <entry>Gb<subscript>(1,1)</subscript></entry>
++		      <entry>Gb<subscript>(2,1)</subscript></entry>
++		      <entry>...</entry>
++		      <entry>Gb<subscript>(31,1)</subscript></entry>
++		    </row>
++		  </tbody>
++		</tgroup>
++	      </informaltable>
++	    </para>
++	    <para>
++	      A <constant>V4L2_PIX_FMT_SGRBG12V32</constant> image
++	      would be similar with the exception that instead of
++	      eight, four of the high order bits of each two bytes
++	      forming a pixel would be zeros.
++	    </para>
++	  </formalpara>
++	</example>
++      </refsect1>
++    </refentry>
+diff --git a/Documentation/DocBook/media/v4l/pixfmt-srggb12.xml b/Documentation/DocBook/media/v4l/pixfmt-srggb12.xml
+index 0c8e4ad..66c8f42 100644
+--- a/Documentation/DocBook/media/v4l/pixfmt-srggb12.xml
++++ b/Documentation/DocBook/media/v4l/pixfmt-srggb12.xml
+@@ -1,4 +1,4 @@
+-    <refentry>
++    <refentry id="pixfmt-sgrbg12">
+       <refmeta>
+ 	<refentrytitle>V4L2_PIX_FMT_SRGGB12 ('RG12'),
+ 	 V4L2_PIX_FMT_SGRBG12 ('BA12'),
+diff --git a/Documentation/DocBook/media/v4l/pixfmt.xml b/Documentation/DocBook/media/v4l/pixfmt.xml
+index d871245..cf9172f 100644
+--- a/Documentation/DocBook/media/v4l/pixfmt.xml
++++ b/Documentation/DocBook/media/v4l/pixfmt.xml
+@@ -1593,6 +1593,7 @@ access the palette, this must be done with ioctls of the Linux framebuffer API.<
+     &sub-srggb10alaw8;
+     &sub-srggb10dpcm8;
+     &sub-srggb12;
++    &sub-sgrbgv;
+   </section>
+ 
+   <section id="yuv-formats">
+-- 
+2.8.1
+

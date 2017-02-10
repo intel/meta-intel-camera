@@ -1,0 +1,16 @@
+aiqb@intelcamera
+camera3hal@intelcamera
+cameralibs@intelcamera
+cameralinuxadapt@intelcamera
+cameraunittests@intelcamera
+cameraxml@intelcamera
+fw-ipu4@intelcamera
+icameraadapter@intelcamera
+ipu4mod@intelcamera
+libiacss@intelcamera
+libiaimaging@intelcamera
+camerasource@intelcamera
+camera-drivers@intelcamera
+pvl-gst@intelcamera
+pvl-cvtrace@intelcamera
+pvl-libs@intelcamera

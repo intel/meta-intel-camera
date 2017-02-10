@@ -1,0 +1,318 @@
+From 7bb313a8f045f3ab6bd0e26d8598872655fadab0 Mon Sep 17 00:00:00 2001
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Date: Thu, 19 Nov 2015 12:06:14 +0200
+Subject: [PATCH 05/19] DocBook: v4l: Add documentation for YUYV420_V32 pixel
+ format
+
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ .../DocBook/media/v4l/pixfmt-yyuv420-v.xml         | 135 ++++++++++++++++++++
+ .../DocBook/media/v4l/pixfmt-yyuv422-v.xml         | 140 +++++++++++++++++++++
+ Documentation/DocBook/media/v4l/pixfmt.xml         |   2 +
+ 3 files changed, 277 insertions(+)
+ create mode 100644 Documentation/DocBook/media/v4l/pixfmt-yyuv420-v.xml
+ create mode 100644 Documentation/DocBook/media/v4l/pixfmt-yyuv422-v.xml
+
+diff --git a/Documentation/DocBook/media/v4l/pixfmt-yyuv420-v.xml b/Documentation/DocBook/media/v4l/pixfmt-yyuv420-v.xml
+new file mode 100644
+index 0000000..2241aa2
+--- /dev/null
++++ b/Documentation/DocBook/media/v4l/pixfmt-yyuv420-v.xml
+@@ -0,0 +1,135 @@
++    <refentry id="V4L2-PIX-FMT-YYUV420-V32">
++      <refmeta>
++	<refentrytitle>V4L2_PIX_FMT_YYUV420_V32 ('yV0A')</refentrytitle>,
++	&manvol;
++      </refmeta>
++      <refnamediv>
++	<refname><constant>V4L2_PIX_FMT_YYUV420_V32</constant></refname>
++      </refnamediv>
++      <refsect1>
++	<title>Description</title>
++
++	<para>In this format there's one Y sample per pixel and one U
++	and V sample per a square of four pixels.</para>
++
++	<para>This format is based on horizontal vectors 32 samples long.
++	The image is split to blocks consisting of 64x2 pixels. Y samples
++	of the first and second lines of the block are followed by the U
++	samples and the V samples of the entire block.</para>
++
++	<para>The blocks of 64x2 pixels are immediately followed by
++	one another until the end of the line. If the width of the
++	image is not divisible by 64, padding is added to each vector
++	so that the entire block is filled.</para>
++
++	<para>Each sample is 16 bits wide.</para>
++
++	<example>
++	  <title><constant>V4L2_PIX_FMT_YYUV420_V32</constant> 64
++	  &times; 2 pixel image</title>
++
++	  <formalpara>
++	    <title>Byte Order.</title>
++	    <para>Each cell is two bytes in little endian format.
++		<informaltable frame="none">
++		<tgroup cols="5" align="center">
++		  <colspec align="left" colwidth="2*" />
++		  <tbody valign="top">
++		    <row>
++		      <entry>start&nbsp;+&nbsp;0:</entry>
++		      <entry>Y'<subscript>0,0</subscript></entry>
++		      <entry>Y'<subscript>1,0</subscript></entry>
++		      <entry>...</entry>
++		      <entry>Y'<subscript>31,0</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>start&nbsp;+&nbsp;64:</entry>
++		      <entry>Y'<subscript>32,0</subscript></entry>
++		      <entry>Y'<subscript>33,0</subscript></entry>
++		      <entry>...</entry>
++		      <entry>Y'<subscript>63,0</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>start&nbsp;+&nbsp;128:</entry>
++		      <entry>Y'<subscript>0,1</subscript></entry>
++		      <entry>Y'<subscript>1,1</subscript></entry>
++		      <entry>...</entry>
++		      <entry>Y'<subscript>31,1</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>start&nbsp;+&nbsp;192:</entry>
++		      <entry>Y'<subscript>32,1</subscript></entry>
++		      <entry>Y'<subscript>33,1</subscript></entry>
++		      <entry>...</entry>
++		      <entry>Y'<subscript>63,1</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>start&nbsp;+&nbsp;256:</entry>
++		      <entry>U<subscript>0</subscript></entry>
++		      <entry>U<subscript>1</subscript></entry>
++		      <entry>...</entry>
++		      <entry>U<subscript>31</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>start&nbsp;+&nbsp;320:</entry>
++		      <entry>V<subscript>0</subscript></entry>
++		      <entry>V<subscript>1</subscript></entry>
++		      <entry>...</entry>
++		      <entry>V<subscript>31</subscript></entry>
++		    </row>
++		  </tbody>
++		</tgroup>
++		</informaltable>
++	      </para>
++	  </formalpara>
++
++	  <formalpara>
++	    <title>Color Sample Location.</title>
++	    <para>
++		<informaltable frame="none">
++		<tgroup cols="10" align="center">
++		  <tbody valign="top">
++		    <row>
++		      <entry></entry>
++		      <entry>0</entry><entry></entry><entry>1</entry><entry></entry>
++		      <entry>2</entry><entry></entry><entry>3</entry><entry>...</entry>
++		      <entry>62</entry><entry></entry><entry>63</entry>
++		    </row>
++		    <row>
++		      <entry>0</entry>
++		      <entry>Y'<subscript>0,0</subscript></entry><entry></entry>
++		      <entry>Y'<subscript>1,0</subscript></entry><entry></entry>
++		      <entry>Y'<subscript>2,0</subscript></entry><entry></entry>
++		      <entry>Y'<subscript>3,0</subscript></entry>
++		      <entry></entry>
++		      <entry>Y'<subscript>62,0</subscript></entry><entry></entry>
++		      <entry>Y'<subscript>63,0</subscript></entry>
++		    </row>
++		    <row>
++		      <entry></entry>
++		      <entry></entry><entry>C<subscript>0</subscript></entry>
++		      <entry></entry><entry></entry>
++		      <entry></entry><entry>C<subscript>1</subscript></entry>
++		      <entry></entry>
++		      <entry></entry>
++		      <entry></entry><entry>C<subscript>31</subscript></entry>
++		      <entry></entry>
++		    </row>
++		    <row>
++		      <entry>1</entry>
++		      <entry>Y'<subscript>0,1</subscript></entry><entry></entry>
++		      <entry>Y'<subscript>1,1</subscript></entry><entry></entry>
++		      <entry>Y'<subscript>2,1</subscript></entry><entry></entry>
++		      <entry>Y'<subscript>3,1</subscript></entry>
++		      <entry></entry>
++		      <entry>Y'<subscript>62,1</subscript></entry><entry></entry>
++		      <entry>Y'<subscript>63,1</subscript></entry>
++		    </row>
++		  </tbody>
++		</tgroup>
++		</informaltable>
++	      </para>
++	  </formalpara>
++	</example>
++      </refsect1>
++    </refentry>
+diff --git a/Documentation/DocBook/media/v4l/pixfmt-yyuv422-v.xml b/Documentation/DocBook/media/v4l/pixfmt-yyuv422-v.xml
+new file mode 100644
+index 0000000..b8b36b3
+--- /dev/null
++++ b/Documentation/DocBook/media/v4l/pixfmt-yyuv422-v.xml
+@@ -0,0 +1,140 @@
++    <refentry id="V4L2-PIX-FMT-YYUV422-V32">
++      <refmeta>
++	<refentrytitle>V4L2_PIX_FMT_YYUV422_V32 ('yV0B')</refentrytitle>,
++	&manvol;
++      </refmeta>
++      <refnamediv>
++	<refname><constant>V4L2_PIX_FMT_YYUV422_V32</constant></refname>
++      </refnamediv>
++      <refsect1>
++	<title>Description</title>
++
++	<para>In this format there's one Y sample per pixel and one U
++	and V sample per two horizontally consecutive pixels.</para>
++
++	<para>This format is based on horizontal vectors 32 samples long.
++	The image is split to blocks consisting of 64x2 pixels. Y samples
++	of the first and second lines of the block are followed by the U
++	samples and the V samples of the first line, finally followed by
++	the U and the V samples of the second line.</para>
++
++	<para>The blocks of 64x2 pixels are immediately followed by
++	one another until the end of the line. If the width of the
++	image is not divisible by 64, padding is added to each vector
++	so that the entire block is filled.</para>
++
++	<para>Each sample is 16 bits wide.</para>
++
++	<example>
++	  <title><constant>V4L2_PIX_FMT_YYUV422_V32</constant> 64
++	  &times; 2 pixel image</title>
++
++	  <formalpara>
++	    <title>Byte Order.</title>
++	    <para>Each cell is two bytes in little endian format.
++		<informaltable frame="none">
++		<tgroup cols="5" align="center">
++		  <colspec align="left" colwidth="2*" />
++		  <tbody valign="top">
++		    <row>
++		      <entry>start&nbsp;+&nbsp;0:</entry>
++		      <entry>Y'<subscript>0,0</subscript></entry>
++		      <entry>Y'<subscript>1,0</subscript></entry>
++		      <entry>...</entry>
++		      <entry>Y'<subscript>31,0</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>start&nbsp;+&nbsp;64:</entry>
++		      <entry>Y'<subscript>32,0</subscript></entry>
++		      <entry>Y'<subscript>33,0</subscript></entry>
++		      <entry>...</entry>
++		      <entry>Y'<subscript>63,0</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>start&nbsp;+&nbsp;128:</entry>
++		      <entry>Y'<subscript>0,1</subscript></entry>
++		      <entry>Y'<subscript>1,1</subscript></entry>
++		      <entry>...</entry>
++		      <entry>Y'<subscript>31,1</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>start&nbsp;+&nbsp;192:</entry>
++		      <entry>Y'<subscript>32,1</subscript></entry>
++		      <entry>Y'<subscript>33,1</subscript></entry>
++		      <entry>...</entry>
++		      <entry>Y'<subscript>63,1</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>start&nbsp;+&nbsp;256:</entry>
++		      <entry>U<subscript>0,0</subscript></entry>
++		      <entry>U<subscript>1,0</subscript></entry>
++		      <entry>...</entry>
++		      <entry>U<subscript>31,0</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>start&nbsp;+&nbsp;320:</entry>
++		      <entry>V<subscript>0,0</subscript></entry>
++		      <entry>V<subscript>1,0</subscript></entry>
++		      <entry>...</entry>
++		      <entry>V<subscript>31,0</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>start&nbsp;+&nbsp;256:</entry>
++		      <entry>U<subscript>0,1</subscript></entry>
++		      <entry>U<subscript>1,1</subscript></entry>
++		      <entry>...</entry>
++		      <entry>U<subscript>31,1</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>start&nbsp;+&nbsp;320:</entry>
++		      <entry>V<subscript>0,1</subscript></entry>
++		      <entry>V<subscript>1,1</subscript></entry>
++		      <entry>...</entry>
++		      <entry>V<subscript>31,1</subscript></entry>
++		    </row>
++		  </tbody>
++		</tgroup>
++		</informaltable>
++	      </para>
++	  </formalpara>
++
++	  <formalpara>
++	    <title>Color Sample Location.</title>
++	    <para>
++		<informaltable frame="none">
++		<tgroup cols="10" align="center">
++		  <tbody valign="top">
++		    <row>
++		      <entry></entry>
++		      <entry>0</entry><entry></entry><entry>1</entry><entry></entry>
++		      <entry>2</entry><entry></entry><entry>3</entry><entry>...</entry>
++		      <entry>62</entry><entry></entry><entry>63</entry>
++		    </row>
++		    <row>
++		      <entry>0</entry>
++		      <entry>Y'<subscript>0,0</subscript></entry><entry>C<subscript>0,0</subscript></entry>
++		      <entry>Y'<subscript>1,0</subscript></entry><entry></entry>
++		      <entry>Y'<subscript>2,0</subscript></entry><entry>C<subscript>1,0</subscript></entry>
++		      <entry>Y'<subscript>3,0</subscript></entry>
++		      <entry></entry>
++		      <entry>Y'<subscript>62,0</subscript></entry><entry>C<subscript>0,31</subscript></entry>
++		      <entry>Y'<subscript>63,0</subscript></entry>
++		    </row>
++		    <row>
++		      <entry>1</entry>
++		      <entry>Y'<subscript>0,1</subscript></entry><entry>C<subscript>0,1</subscript></entry>
++		      <entry>Y'<subscript>1,1</subscript></entry><entry></entry>
++		      <entry>Y'<subscript>2,1</subscript></entry><entry>C<subscript>1,1</subscript></entry>
++		      <entry>Y'<subscript>3,1</subscript></entry>
++		      <entry></entry>
++		      <entry>Y'<subscript>62,1</subscript></entry><entry>C<subscript>1,31</subscript></entry>
++		      <entry>Y'<subscript>63,1</subscript></entry>
++		    </row>
++		  </tbody>
++		</tgroup>
++		</informaltable>
++	      </para>
++	  </formalpara>
++	</example>
++      </refsect1>
++    </refentry>
+diff --git a/Documentation/DocBook/media/v4l/pixfmt.xml b/Documentation/DocBook/media/v4l/pixfmt.xml
+index cf9172f..d7095e2 100644
+--- a/Documentation/DocBook/media/v4l/pixfmt.xml
++++ b/Documentation/DocBook/media/v4l/pixfmt.xml
+@@ -1640,6 +1640,8 @@ information.</para>
+     &sub-nv16m;
+     &sub-nv24;
+     &sub-m420;
++    &sub-yyuv420-v;
++    &sub-yyuv422-v;
+   </section>
+ 
+   <section>
+-- 
+2.8.1
+

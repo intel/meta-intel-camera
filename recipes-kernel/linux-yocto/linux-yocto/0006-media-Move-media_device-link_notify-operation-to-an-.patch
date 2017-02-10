@@ -1,0 +1,155 @@
+From ef0350cab890f838d8ea859754bd0f5496741573 Mon Sep 17 00:00:00 2001
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Date: Tue, 3 Nov 2015 04:27:51 +0200
+Subject: [PATCH 06/17] media: Move media_device link_notify operation to an
+ ops structure
+
+This will allow adding new operations without increasing the
+media_device structure size for drivers that don't implement any media
+device operation.
+
+Change-Id: I0dafb353cb76763f01dbd064bb7460dedfe42b5f
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/media-entity.c                  | 11 ++++++-----
+ drivers/media/platform/exynos4-is/media-dev.c |  6 +++++-
+ drivers/media/platform/omap3isp/isp.c         |  6 +++++-
+ drivers/staging/media/omap4iss/iss.c          |  6 +++++-
+ include/media/media-device.h                  | 13 +++++++++++--
+ 5 files changed, 32 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/media/media-entity.c b/drivers/media/media-entity.c
+index 767fe55..1e1c08c 100644
+--- a/drivers/media/media-entity.c
++++ b/drivers/media/media-entity.c
+@@ -592,17 +592,18 @@ int __media_entity_setup_link(struct media_link *link, u32 flags)
+ 
+ 	mdev = source->parent;
+ 
+-	if (mdev->link_notify) {
+-		ret = mdev->link_notify(link, flags,
+-					MEDIA_DEV_NOTIFY_PRE_LINK_CH);
++	if (mdev->ops && mdev->ops->link_notify) {
++		ret = mdev->ops->link_notify(link, flags,
++					     MEDIA_DEV_NOTIFY_PRE_LINK_CH);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+ 
+ 	ret = __media_entity_setup_link_notify(link, flags);
+ 
+-	if (mdev->link_notify)
+-		mdev->link_notify(link, flags, MEDIA_DEV_NOTIFY_POST_LINK_CH);
++	if (mdev->ops && mdev->ops->link_notify)
++		mdev->ops->link_notify(link, flags,
++				       MEDIA_DEV_NOTIFY_POST_LINK_CH);
+ 
+ 	return ret;
+ }
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index 4f5586a..591fabc 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -1111,6 +1111,10 @@ static int fimc_md_link_notify(struct media_link *link, unsigned int flags,
+ 	return ret ? -EPIPE : 0;
+ }
+ 
++static const struct media_device_ops fimc_md_ops = {
++	.link_notify = fimc_md_link_notify,
++};
++
+ static ssize_t fimc_md_sysfs_show(struct device *dev,
+ 				  struct device_attribute *attr, char *buf)
+ {
+@@ -1334,7 +1338,7 @@ static int fimc_md_probe(struct platform_device *pdev)
+ 
+ 	strlcpy(fmd->media_dev.model, "SAMSUNG S5P FIMC",
+ 		sizeof(fmd->media_dev.model));
+-	fmd->media_dev.link_notify = fimc_md_link_notify;
++	fmd->media_dev.ops = &fimc_md_ops;
+ 	fmd->media_dev.dev = dev;
+ 
+ 	v4l2_dev = &fmd->v4l2_dev;
+diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
+index 56e683b..a9e520b 100644
+--- a/drivers/media/platform/omap3isp/isp.c
++++ b/drivers/media/platform/omap3isp/isp.c
+@@ -656,6 +656,10 @@ static irqreturn_t isp_isr(int irq, void *_isp)
+ 	return IRQ_HANDLED;
+ }
+ 
++static const struct media_device_ops isp_media_ops = {
++	.link_notify = isp_pipeline_link_notify,
++};
++
+ /* -----------------------------------------------------------------------------
+  * Pipeline power management
+  *
+@@ -1873,7 +1877,7 @@ static int isp_register_entities(struct isp_device *isp)
+ 	strlcpy(isp->media_dev.model, "TI OMAP3 ISP",
+ 		sizeof(isp->media_dev.model));
+ 	isp->media_dev.hw_revision = isp->revision;
+-	isp->media_dev.link_notify = isp_pipeline_link_notify;
++	isp->media_dev.ops = &isp_media_ops;
+ 	ret = media_device_register(&isp->media_dev);
+ 	if (ret < 0) {
+ 		dev_err(isp->dev, "%s: Media device registration failed (%d)\n",
+diff --git a/drivers/staging/media/omap4iss/iss.c b/drivers/staging/media/omap4iss/iss.c
+index aa76ccd..269aa1a 100644
+--- a/drivers/staging/media/omap4iss/iss.c
++++ b/drivers/staging/media/omap4iss/iss.c
+@@ -362,6 +362,10 @@ static irqreturn_t iss_isr(int irq, void *_iss)
+ 	return IRQ_HANDLED;
+ }
+ 
++static const struct media_device_ops iss_media_ops = {
++	.link_notify = iss_pipeline_link_notify,
++};
++
+ /* -----------------------------------------------------------------------------
+  * Pipeline power management
+  *
+@@ -1183,7 +1187,7 @@ static int iss_register_entities(struct iss_device *iss)
+ 	strlcpy(iss->media_dev.model, "TI OMAP4 ISS",
+ 		sizeof(iss->media_dev.model));
+ 	iss->media_dev.hw_revision = iss->revision;
+-	iss->media_dev.link_notify = iss_pipeline_link_notify;
++	iss->media_dev.ops = &iss_media_ops;
+ 	ret = media_device_register(&iss->media_dev);
+ 	if (ret < 0) {
+ 		dev_err(iss->dev, "Media device registration failed (%d)\n",
+diff --git a/include/media/media-device.h b/include/media/media-device.h
+index 6e6db78..4123ecd 100644
+--- a/include/media/media-device.h
++++ b/include/media/media-device.h
+@@ -33,6 +33,16 @@
+ struct device;
+ 
+ /**
++ * struct media_device_ops - Media device operations
++ * @link_notify: Link state change notification callback. This callback is
++ *		 called with the graph_mutex held.
++ */
++struct media_device_ops {
++	int (*link_notify)(struct media_link *link, u32 flags,
++			   unsigned int notification);
++};
++
++/**
+  * struct media_device - Media device
+  * @dev:	Parent device
+  * @devnode:	Media device node
+@@ -76,8 +86,7 @@ struct media_device {
+ 	/* Serializes graph operations. */
+ 	struct mutex graph_mutex;
+ 
+-	int (*link_notify)(struct media_link *link, u32 flags,
+-			   unsigned int notification);
++	const struct media_device_ops *ops;
+ };
+ 
+ /* Supported link_notify @notification values. */
+-- 
+2.9.0
+
