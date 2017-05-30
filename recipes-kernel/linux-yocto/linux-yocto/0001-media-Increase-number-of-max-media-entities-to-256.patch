@@ -1,0 +1,28 @@
+From 4ac2f598da879547c19ab2615a4b961d9928d1db Mon Sep 17 00:00:00 2001
+From: Soren Friis <soren.friis@intel.com>
+Date: Wed, 17 May 2017 10:03:53 +0300
+Subject: [PATCH] media: Increase number of max media entities to 256
+
+Increase the max number of media entities from 128 to 256.
+
+Signed-off-by: Soren Friis <soren.friis@intel.com>
+---
+ include/media/media-entity.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/media/media-entity.h b/include/media/media-entity.h
+index 6ffcc9e..f7fd212 100644
+--- a/include/media/media-entity.h
++++ b/include/media/media-entity.h
+@@ -119,7 +119,7 @@ static inline u32 media_entity_subtype(struct media_entity *entity)
+ }
+ 
+ #define MEDIA_ENTITY_ENUM_MAX_DEPTH	16
+-#define MEDIA_ENTITY_ENUM_MAX_ID	128
++#define MEDIA_ENTITY_ENUM_MAX_ID	256
+ 
+ /*
+  * The number of pads can't be bigger than the number of entities,
+-- 
+2.7.4
+

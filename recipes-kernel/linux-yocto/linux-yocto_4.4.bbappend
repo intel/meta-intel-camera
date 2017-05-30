@@ -51,5 +51,6 @@ SRC_URI_append_intel-corei7-64 = " file://0001-v4l-Packed-Bayer-raw12-pixel-form
 SRC_URI_append_intel-corei7-64 = " file://0001-v4l-Add-14-bit-raw-bayer-pixel-format-definitions.patch"
 SRC_URI_append_intel-corei7-64 = " file://0002-v4l-Add-packed-Bayer-raw14-pixel-formats.patch"
 SRC_URI_append_intel-corei7-64 = " file://0001-Add-Kconfig-for-Intel-IPU4-driver.patch"
+SRC_URI_append_intel-corei7-64 = " file://0001-media-Increase-number-of-max-media-entities-to-256.patch"
 SRC_URI_append_intel-corei7-64 = " file://ipu4-driver.cfg"
 
